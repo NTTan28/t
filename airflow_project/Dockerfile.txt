@@ -1,0 +1,18 @@
+# Sử dụng image chính thức của Airflow làm base image
+FROM apache/airflow:2.2.2
+
+# Cài đặt thêm các thư viện Python nếu cần thiết
+USER root
+RUN pip install --no-cache-dir \
+    psycopg2-binary \  # Thư viện PostgreSQL
+    pandas \  # Thư viện xử lý dữ liệu
+    faker  # Thư viện tạo dữ liệu giả
+
+# Tạo thư mục làm việc trong container (nếu cần)
+WORKDIR /opt/airflow
+
+# Copy các tập tin DAGs của bạn vào thư mục DAGs trong container
+COPY ./dags /opt/airflow/dags/
+
+# Đảm bảo container sẽ chạy Airflow Webserver khi khởi động
+CMD ["webserver"]
